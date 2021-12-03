@@ -8,6 +8,22 @@ var bordaBtnMenu = 10;
 var tela = 0;
 var larguraBordaMenu = 6; 
 var corBtnMenu = 'rgb(0,0,200)';
+var xr, yr;
+var numeroR = 13; 
+var imgNave;
+var xJogador, yJogador;   
+
+function preload() {
+  imgNave = loadImage('imagens/ship_21.png');
+}
+
+function obstaculo(xo, yo, valor ){
+  fill(255);
+  ellipse(xo,yo,50,50);
+  fill(255,0,0);
+  text(valor,xo-15,yo+10);
+}
+
 
 function estaSobreBtn(yBtnMenu){
   return  mouseX > xBtnMenu && mouseX < xBtnMenu + larguraBtnMenu && mouseY > yBtnMenu && mouseY < yBtnMenu + alturaBtnMenu;
@@ -15,6 +31,10 @@ function estaSobreBtn(yBtnMenu){
 
 function setup() {
   createCanvas(400, 400);
+  xr = random(400);
+  yr = random(50,400);
+  xJogador = 200;
+  yJogador = 200;
 }
 
 function draw() {
@@ -31,6 +51,8 @@ function draw() {
       strokeWeight(larguraBordaMenu);
     }
     rect(xBtnMenu,yBtn1Menu,larguraBtnMenu,alturaBtnMenu,bordaBtnMenu);
+    fill(255);
+    text("Jogar",xBtnMenu+60,yBtn1Menu+35);
 
     strokeWeight(0);
     fill(corBtnMenu);
@@ -51,7 +73,40 @@ function draw() {
     textSize(30);
     fill(255); 
     noStroke(); 
-    text("Jogo em ação", 70, 100);
+
+
+    
+
+    text("8 + 5?", 70, 50);
+
+    obstaculo(230,140,"14"); 
+
+    obstaculo(130,340,"11");
+   
+    obstaculo(xr,yr,numeroR);
+
+     
+
+    // movimenta a nave 
+    if (keyIsDown(LEFT_ARROW)) {
+      xJogador = xJogador - 5;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+      xJogador += 5;
+    }
+    if (keyIsDown(UP_ARROW)) {
+      yJogador -= 5;
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+      yJogador += 5;
+    }
+    // desenha a nave 
+    imageMode(CENTER); 
+    image(imgNave,xJogador, yJogador);
+
+
+
+
   }
   if (tela == 2){
     background(0);
