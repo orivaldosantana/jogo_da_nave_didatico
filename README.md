@@ -8,7 +8,10 @@ Nome: Espaço M
 * [usando o teclado para movimentar a nave](https://youtu.be/nL2wa8niA2c)
   * [Mais sobre o teclado](https://youtu.be/C4KFQqOdLME)
 * [Adicionando elementos fixos no cenário ](https://youtu.be/oh2I7vWVrvQ)
+* [Movimentando estes elementos de cima para baixo constantemente](https://youtu.be/0JZhE2V4Esw)
 
+## Acesso 
+Para experimentar esse jogo acesse o seguinte link: https://orivaldosantana.github.io/jogo_da_nave_didatico/ 
 
 ## Outros jogos 
 * https://github.com/orivaldosantana/jogo_da_memoria_didatico
