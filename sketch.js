@@ -9,6 +9,8 @@ var tela = 0;
 var larguraBordaMenu = 6; 
 var corBtnMenu = 'rgb(0,0,200)';
 var xr, yr;
+var xo1, xo2, yo1, yo2;
+var vo; // velocidade do obstáculo  
 var numeroR = 13; 
 var imgNave;
 var xJogador, yJogador;   
@@ -29,12 +31,18 @@ function estaSobreBtn(yBtnMenu){
   return  mouseX > xBtnMenu && mouseX < xBtnMenu + larguraBtnMenu && mouseY > yBtnMenu && mouseY < yBtnMenu + alturaBtnMenu;
 }
 
+
 function setup() {
   createCanvas(400, 400);
   xr = random(400);
   yr = random(50,400);
+  xo1 = random(400);
+  xo2 = random(400);
+  yo1 = - random(100,400);
+  yo2 = - random(100,400);
   xJogador = 200;
   yJogador = 200;
+  vo = 5; 
 }
 
 function draw() {
@@ -79,11 +87,26 @@ function draw() {
 
     text("8 + 5?", 70, 50);
 
-    obstaculo(230,140,"14"); 
+    obstaculo(xo1,yo1,"14"); 
+    yo1 = yo1 + vo; 
+    if ( yo1 > 400 ){
+      xo1 = random(400);
+      yo1 = - random(100,400);
+    }
 
-    obstaculo(130,340,"11");
-   
+    obstaculo(xo2,yo2,"11");
+    yo2 = yo2 + vo; 
+    if ( yo2 > 400 ){
+      xo2 = random(400);
+      yo2 = - random(100,400);
+    }
+
     obstaculo(xr,yr,numeroR);
+    yr = yr + vo;
+    if ( yr > 400 ){
+      xr = random(400);
+      yr = - random(100,400);
+    } 
 
      
 
