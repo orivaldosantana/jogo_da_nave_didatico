@@ -60,21 +60,30 @@ function draw() {
     }
     rect(xBtnMenu,yBtn1Menu,larguraBtnMenu,alturaBtnMenu,bordaBtnMenu);
     fill(255);
+    noStroke(); 
     text("Jogar",xBtnMenu+60,yBtn1Menu+35);
 
+    stroke(250,200,250);
     strokeWeight(0);
     fill(corBtnMenu);
     if ( estaSobreBtn(yBtn2Menu) ){
       strokeWeight(larguraBordaMenu);
     }
     rect(xBtnMenu,yBtn2Menu,larguraBtnMenu,alturaBtnMenu,bordaBtnMenu);
+    fill(255);
+    noStroke(); 
+    text("Instruções",xBtnMenu+30,yBtn2Menu+35);
 
+    stroke(250,200,250);
     strokeWeight(0);
     fill(corBtnMenu);
     if ( estaSobreBtn(yBtn3Menu) ){
       strokeWeight(larguraBordaMenu);
     }
     rect(xBtnMenu,yBtn3Menu,larguraBtnMenu,alturaBtnMenu,bordaBtnMenu);
+    fill(255);
+    noStroke(); 
+    text("Créditos",xBtnMenu+40,yBtn3Menu+35);
   }
   if (tela == 1){
     background(0);
