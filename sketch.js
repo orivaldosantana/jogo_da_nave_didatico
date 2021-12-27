@@ -14,6 +14,14 @@ var vo; // velocidade do obstáculo
 var numeroR = 13; 
 var imgNave;
 var xJogador, yJogador;   
+var larguraVoltar = 80;
+var alturaVoltar = 30;
+var xBtnVoltar = 300; 
+var ybtnVoltar = 350; 
+var vXo = []; 
+var vYo = []; 
+var quantidadeObst = 5; 
+var vValoresO = []; 
 
 function preload() {
   imgNave = loadImage('imagens/ship_21.png');
@@ -21,9 +29,10 @@ function preload() {
 
 function obstaculo(xo, yo, valor ){
   fill(255);
-  ellipse(xo,yo,50,50);
+  ellipse(xo,yo,30,30);
   fill(255,0,0);
-  text(valor,xo-15,yo+10);
+  textSize(15);
+  text(valor,xo-8,yo+7);
 }
 
 
@@ -31,15 +40,39 @@ function estaSobreBtn(yBtnMenu){
   return  mouseX > xBtnMenu && mouseX < xBtnMenu + larguraBtnMenu && mouseY > yBtnMenu && mouseY < yBtnMenu + alturaBtnMenu;
 }
 
+function desenhaBntVoltar(){ 
+  if ( estaSobreBtnVoltar () ){
+    fill(255);
+  } else {
+    fill(100);
+  }
+  rect(xBtnVoltar,ybtnVoltar,larguraVoltar,alturaVoltar, 8);
+  noStroke(); 
+  textSize(20)
+  fill(0);
+  text("Voltar",xBtnVoltar+15,ybtnVoltar+22);
+}
+
+function estaSobreBtnVoltar(){
+
+  return  mouseX > xBtnVoltar && mouseX < xBtnVoltar + larguraVoltar && mouseY > ybtnVoltar && mouseY < ybtnVoltar + alturaVoltar;
+}
+
 
 function setup() {
   createCanvas(400, 400);
   xr = random(400);
   yr = random(50,400);
-  xo1 = random(400);
-  xo2 = random(400);
-  yo1 = - random(100,400);
-  yo2 = - random(100,400);
+
+  for (i=0; i<quantidadeObst; i++){
+    vXo[i] = random(400);
+    vYo[i] = - random(100,400);
+    valorO = parseInt( random(99) );
+    while(valorO == numeroR ){
+      valorO = random(99);
+    }
+    vValoresO[i] = valorO; 
+  }
   xJogador = 200;
   yJogador = 200;
   vo = 5; 
@@ -96,18 +129,14 @@ function draw() {
 
     text("8 + 5?", 70, 50);
 
-    obstaculo(xo1,yo1,"14"); 
-    yo1 = yo1 + vo; 
-    if ( yo1 > 400 ){
-      xo1 = random(400);
-      yo1 = - random(100,400);
-    }
 
-    obstaculo(xo2,yo2,"11");
-    yo2 = yo2 + vo; 
-    if ( yo2 > 400 ){
-      xo2 = random(400);
-      yo2 = - random(100,400);
+    for ( i=0; i<quantidadeObst; i++){
+      obstaculo(vXo[i],vYo[i],vValoresO[i]);
+      vYo[i] = vYo[i] + vo; 
+      if ( vYo[i] > 400 ){
+        vXo[i] = random(400);
+        vYo[i] = - random(100,400);
+      }      
     }
 
     obstaculo(xr,yr,numeroR);
@@ -146,6 +175,9 @@ function draw() {
     fill(255); 
     noStroke(); 
     text("Instruções", 70, 100);
+
+
+    desenhaBntVoltar(); 
   }
   if (tela == 3){
     background(0);
@@ -153,22 +185,31 @@ function draw() {
     fill(255); 
     noStroke(); 
     text("Créditos", 70, 100);
+
+    desenhaBntVoltar(); 
   }
 
 }
 
 
 function mouseClicked() {
-  if ( estaSobreBtn(yBtn1Menu) ){
-    console.log("clicou no botão 1!")
-    tela = 1; 
+  if ( tela == 0 ){
+    if ( estaSobreBtn(yBtn1Menu) ){
+      console.log("clicou no botão 1!")
+      tela = 1; 
+    }
+    if (estaSobreBtn(yBtn2Menu) ){
+      console.log("clicou no botão 2!");
+      tela = 2; 
+    }
+    if ( estaSobreBtn(yBtn3Menu) ){
+      console.log("clicou no botão rosa!");
+      tela = 3; 
+    }
   }
-  if (estaSobreBtn(yBtn2Menu) ){
-    console.log("clicou no botão 2!");
-    tela = 2; 
-  }
-  if ( estaSobreBtn(yBtn3Menu) ){
-    console.log("clicou no botão rosa!");
-    tela = 3; 
+  if ( tela == 2 || tela == 3){
+    if ( estaSobreBtnVoltar() ){
+      tela = 0; 
+    }
   }
 }
