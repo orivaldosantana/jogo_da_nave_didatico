@@ -20,8 +20,10 @@ var xBtnVoltar = 300;
 var ybtnVoltar = 350; 
 var vXo = []; 
 var vYo = []; 
-var quantidadeObst = 5; 
+var quantidadeObst = 3; 
 var vValoresO = []; 
+var vidas = 5; 
+var distMinimaEntreNaveObst = 50; 
 
 function preload() {
   imgNave = loadImage('imagens/ship_21.png');
@@ -58,15 +60,91 @@ function estaSobreBtnVoltar(){
   return  mouseX > xBtnVoltar && mouseX < xBtnVoltar + larguraVoltar && mouseY > ybtnVoltar && mouseY < ybtnVoltar + alturaVoltar;
 }
 
+function instrucoes(){
+  background(0);
+  textSize(30);
+  fill(255); 
+  noStroke(); 
+  text("Instruções", 70, 100);
+  desenhaBntVoltar(); 
+}
+
+function creditos(){
+  background(0);
+  textSize(30);
+  fill(255); 
+  noStroke(); 
+  text("Créditos", 70, 100);
+  desenhaBntVoltar(); 
+}
+
+function fase1(){
+  background(0);
+  textSize(30);
+  fill(255); 
+  noStroke(); 
+
+  text("8 + 5?", 70, 40);
+  textSize(16); 
+  text("Vidas: "+vidas, 400, 30); 
+
+  for ( i=0; i<quantidadeObst; i++){
+    obstaculo(vXo[i],vYo[i],vValoresO[i]);
+    vYo[i] = vYo[i] + vo;
+    if ( dist(vXo[i],vYo[i],xJogador,yJogador) < distMinimaEntreNaveObst ) {
+      for ( cont=0; cont<quantidadeObst; cont++){
+        vYo[cont] = -random(100,500); 
+      }
+      vidas = vidas - 1;
+      tela = 4; 
+      xJogador = 250;
+      yJogador = 400; 
+    }
+    if ( vYo[i] > 500 ){
+      vXo[i] = random(400);
+      vYo[i] = - random(100,400);
+    }      
+  }
+
+  obstaculo(xr,yr,numeroR);
+  yr = yr + vo;
+  if ( yr > height ){
+    xr = random(width);
+    yr = - random(100,height);
+  } 
+  // Colisão da resposta com a nave 
+  if ( dist(xr,yr,xJogador,yJogador) < distMinimaEntreNaveObst ){
+    console.log("Colidiu!");
+    xr = random(width);
+    yr = - random(100,height);
+  }
+
+  // movimenta a nave 
+  if (keyIsDown(LEFT_ARROW)) {
+    xJogador = xJogador - 5;
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    xJogador += 5;
+  }
+  if (keyIsDown(UP_ARROW)) {
+    yJogador -= 5;
+  }
+  if (keyIsDown(DOWN_ARROW)) {
+    yJogador += 5;
+  }
+  // desenha a nave 
+  imageMode(CENTER); 
+  image(imgNave,xJogador, yJogador);
+}
 
 function setup() {
-  createCanvas(400, 400);
-  xr = random(400);
-  yr = random(50,400);
+  createCanvas(500, 500);
+  xr = random(width);
+  yr = random(50,height);
 
   for (i=0; i<quantidadeObst; i++){
-    vXo[i] = random(400);
-    vYo[i] = - random(100,400);
+    vXo[i] = random(width);
+    vYo[i] = - random(100,height);
     valorO = parseInt( random(99) );
     while(valorO == numeroR ){
       valorO = random(99);
@@ -75,7 +153,7 @@ function setup() {
   }
   xJogador = 200;
   yJogador = 200;
-  vo = 5; 
+  vo = 4; 
 }
 
 function draw() {
@@ -119,76 +197,28 @@ function draw() {
     text("Créditos",xBtnMenu+40,yBtn3Menu+35);
   }
   if (tela == 1){
-    background(0);
-    textSize(30);
-    fill(255); 
-    noStroke(); 
-
-
-    
-
-    text("8 + 5?", 70, 50);
-
-
-    for ( i=0; i<quantidadeObst; i++){
-      obstaculo(vXo[i],vYo[i],vValoresO[i]);
-      vYo[i] = vYo[i] + vo; 
-      if ( vYo[i] > 400 ){
-        vXo[i] = random(400);
-        vYo[i] = - random(100,400);
-      }      
-    }
-
-    obstaculo(xr,yr,numeroR);
-    yr = yr + vo;
-    if ( yr > 400 ){
-      xr = random(400);
-      yr = - random(100,400);
-    } 
-
-     
-
-    // movimenta a nave 
-    if (keyIsDown(LEFT_ARROW)) {
-      xJogador = xJogador - 5;
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-      xJogador += 5;
-    }
-    if (keyIsDown(UP_ARROW)) {
-      yJogador -= 5;
-    }
-    if (keyIsDown(DOWN_ARROW)) {
-      yJogador += 5;
-    }
-    // desenha a nave 
-    imageMode(CENTER); 
-    image(imgNave,xJogador, yJogador);
-
-
-
-
+    fase1(); 
   }
   if (tela == 2){
-    background(0);
-    textSize(30);
-    fill(255); 
-    noStroke(); 
-    text("Instruções", 70, 100);
-
-
-    desenhaBntVoltar(); 
+    instrucoes(); 
   }
   if (tela == 3){
-    background(0);
+    creditos(); 
+  }
+  // Tela de espera 
+  // Para quando o jogador perder uma vida 
+  if ( tela == 4 ){
+    background(100,0,0);
     textSize(30);
     fill(255); 
     noStroke(); 
-    text("Créditos", 70, 100);
-
-    desenhaBntVoltar(); 
+    text("Você perdeu uma vida?", 50, 100);    
+    textSize(26);
+    text("Digite ENTER para continuar!", 50, 200);   
+    if ( keyIsDown(ENTER) ){
+      tela = 1; 
+    } 
   }
-
 }
 
 
