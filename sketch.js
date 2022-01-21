@@ -23,7 +23,10 @@ var vYo = [];
 var quantidadeObst = 3; 
 var vValoresO = []; 
 var vidas = 5; 
+var pontos = 0; 
 var distMinimaEntreNaveObst = 50; 
+var disparoAtivo = false; 
+var xDisparo, yDisparo; 
 
 function preload() {
   imgNave = loadImage('imagens/ship_21.png');
@@ -86,7 +89,8 @@ function fase1(){
 
   text("8 + 5?", 70, 40);
   textSize(16); 
-  text("Vidas: "+vidas, 400, 30); 
+  text("Pontos: "+pontos, 400, 20); 
+  text("Vidas: "+vidas, 400, 40); 
 
   for ( i=0; i<quantidadeObst; i++){
     obstaculo(vXo[i],vYo[i],vValoresO[i]);
@@ -117,6 +121,7 @@ function fase1(){
     console.log("Colidiu!");
     xr = random(width);
     yr = - random(100,height);
+    pontos = pontos + 10; 
   }
 
   // movimenta a nave 
@@ -132,9 +137,23 @@ function fase1(){
   if (keyIsDown(DOWN_ARROW)) {
     yJogador += 5;
   }
+  if (keyIsDown(CONTROL) && ! disparoAtivo ) {
+    disparoAtivo = true; 
+    xDisparo = xJogador;
+    yDisparo = yJogador; 
+  }
   // desenha a nave 
   imageMode(CENTER); 
   image(imgNave,xJogador, yJogador);
+  // desenha disparo 
+  if ( disparoAtivo ){
+    fill(255); 
+    ellipse(xDisparo,yDisparo,5,5); 
+    yDisparo = yDisparo - 7; 
+    if (yDisparo < 0){
+      disparoAtivo = false; 
+    }
+  }
 }
 
 function setup() {
@@ -151,8 +170,8 @@ function setup() {
     }
     vValoresO[i] = valorO; 
   }
-  xJogador = 200;
-  yJogador = 200;
+  xJogador = 250;
+  yJogador = 400;
   vo = 4; 
 }
 
@@ -212,7 +231,7 @@ function draw() {
     textSize(30);
     fill(255); 
     noStroke(); 
-    text("Você perdeu uma vida?", 50, 100);    
+    text("Você perdeu uma vida!", 50, 100);    
     textSize(26);
     text("Digite ENTER para continuar!", 50, 200);   
     if ( keyIsDown(ENTER) ){
@@ -228,16 +247,16 @@ function mouseClicked() {
       console.log("clicou no botão 1!")
       tela = 1; 
     }
-    if (estaSobreBtn(yBtn2Menu) ){
+    else if (estaSobreBtn(yBtn2Menu) ){
       console.log("clicou no botão 2!");
       tela = 2; 
     }
-    if ( estaSobreBtn(yBtn3Menu) ){
+    else if ( estaSobreBtn(yBtn3Menu) ){
       console.log("clicou no botão rosa!");
       tela = 3; 
     }
   }
-  if ( tela == 2 || tela == 3){
+  else if ( tela == 2 || tela == 3){
     if ( estaSobreBtnVoltar() ){
       tela = 0; 
     }
