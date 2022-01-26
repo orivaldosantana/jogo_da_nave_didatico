@@ -27,9 +27,23 @@ var pontos = 0;
 var distMinimaEntreNaveObst = 50; 
 var disparoAtivo = false; 
 var xDisparo, yDisparo; 
+var distMinDisparoResposta;
+var perguntas = [];
+var respostas = []; 
+var indiceDesafio = 0;  
+var imgsExplosao = [];
+var animacaoExplosao = false; 
+var xExplosao, yExplosao;   
+var contImgExplosao = 0; 
+var somExplosao; 
+
 
 function preload() {
   imgNave = loadImage('imagens/ship_21.png');
+  for (i=0; i<10; i++){
+    imgsExplosao[i] = loadImage('imagens/bubble_explo'+(i+1)+'.png')
+  }
+  somExplosao =  loadSound('sons/big_explosion.ogg'); 
 }
 
 function obstaculo(xo, yo, valor ){
@@ -38,6 +52,11 @@ function obstaculo(xo, yo, valor ){
   fill(255,0,0);
   textSize(15);
   text(valor,xo-8,yo+7);
+}
+
+function reiniciaObstaculo(indice){
+  vXo[indice] = random(width);
+  vYo[indice] = - random(100,height);  
 }
 
 
@@ -87,7 +106,7 @@ function fase1(){
   fill(255); 
   noStroke(); 
 
-  text("8 + 5?", 70, 40);
+  text(perguntas[indiceDesafio], 70, 40);
   textSize(16); 
   text("Pontos: "+pontos, 400, 20); 
   text("Vidas: "+vidas, 400, 40); 
@@ -95,6 +114,7 @@ function fase1(){
   for ( i=0; i<quantidadeObst; i++){
     obstaculo(vXo[i],vYo[i],vValoresO[i]);
     vYo[i] = vYo[i] + vo;
+    // Colisão Jogador com as respostas erradas 
     if ( dist(vXo[i],vYo[i],xJogador,yJogador) < distMinimaEntreNaveObst ) {
       for ( cont=0; cont<quantidadeObst; cont++){
         vYo[cont] = -random(100,500); 
@@ -104,13 +124,24 @@ function fase1(){
       xJogador = 250;
       yJogador = 400; 
     }
-    if ( vYo[i] > 500 ){
-      vXo[i] = random(400);
-      vYo[i] = - random(100,400);
+    // Colisão do disparo com respostas erradas 
+    if ( disparoAtivo ){
+      if ( dist(vXo[i],vYo[i],xDisparo,yDisparo) < distMinDisparoResposta ) {
+        reiniciaObstaculo(i); 
+        pontos = pontos + 1; 
+        disparoAtivo = false; 
+        animacaoExplosao = true; 
+        xExplosao = xDisparo;
+        yExplosao = yDisparo; 
+        somExplosao.play(); 
+      }
+    }
+    if ( vYo[i] > height ){
+      reiniciaObstaculo(i) 
     }      
   }
 
-  obstaculo(xr,yr,numeroR);
+  obstaculo(xr,yr,respostas[indiceDesafio]);
   yr = yr + vo;
   if ( yr > height ){
     xr = random(width);
@@ -121,7 +152,15 @@ function fase1(){
     console.log("Colidiu!");
     xr = random(width);
     yr = - random(100,height);
-    pontos = pontos + 10; 
+    pontos = pontos + 100; 
+    indiceDesafio = indiceDesafio + 1; 
+  }
+  // Colisão da resposta com o disparo 
+  if (disparoAtivo){
+    if ( dist(xr,yr,xDisparo,yDisparo) < distMinDisparoResposta ){
+      xr = random(width);
+      yr = - random(100,height);
+    }
   }
 
   // movimenta a nave 
@@ -139,6 +178,7 @@ function fase1(){
   }
   if (keyIsDown(CONTROL) && ! disparoAtivo ) {
     disparoAtivo = true; 
+    //somDisparo.play(); 
     xDisparo = xJogador;
     yDisparo = yJogador; 
   }
@@ -154,25 +194,48 @@ function fase1(){
       disparoAtivo = false; 
     }
   }
+  // desenha explosão 
+  if ( animacaoExplosao ){ 
+    image(imgsExplosao[contImgExplosao], xExplosao, yExplosao); 
+    contImgExplosao = contImgExplosao + 1; 
+    if ( contImgExplosao > 9 ){ 
+      contImgExplosao = 0; 
+      animacaoExplosao = false; 
+    }
+  }
 }
 
 function setup() {
   createCanvas(500, 500);
+  frameRate(30);
   xr = random(width);
   yr = random(50,height);
+  distMinDisparoResposta = 20; 
 
   for (i=0; i<quantidadeObst; i++){
     vXo[i] = random(width);
     vYo[i] = - random(100,height);
     valorO = parseInt( random(99) );
-    while(valorO == numeroR ){
+    while(valorO == respostas[0] ){
       valorO = random(99);
     }
     vValoresO[i] = valorO; 
   }
   xJogador = 250;
   yJogador = 400;
-  vo = 4; 
+  vo = 5; 
+  indiceDesafio = 0; 
+  perguntas[0] = "8 + 5?"; 
+  respostas[0] = 13; 
+  perguntas[1] = "18 - 6?"; 
+  respostas[1] = 12; 
+  perguntas[2] = "7 * 5?"; 
+  respostas[2] = 35; 
+  perguntas[3] = "56 / 4?"; 
+  respostas[3] = 14; 
+
+
+
 }
 
 function draw() {
