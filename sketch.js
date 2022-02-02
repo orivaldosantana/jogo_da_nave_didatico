@@ -91,6 +91,15 @@ function instrucoes(){
   desenhaBntVoltar(); 
 }
 
+function venceuJogo() {
+  background(0);
+  textSize(30);
+  fill(255); 
+  noStroke(); 
+  text("Acabou o Jogo!", 70, 100);
+  desenhaBntVoltar();  
+}
+
 function creditos(){
   background(0);
   textSize(30);
@@ -110,6 +119,7 @@ function fase1(){
   textSize(16); 
   text("Pontos: "+pontos, 400, 20); 
   text("Vidas: "+vidas, 400, 40); 
+  text("Nível: "+indiceDesafio,400,60); 
 
   for ( i=0; i<quantidadeObst; i++){
     obstaculo(vXo[i],vYo[i],vValoresO[i]);
@@ -140,7 +150,6 @@ function fase1(){
       reiniciaObstaculo(i) 
     }      
   }
-
   obstaculo(xr,yr,respostas[indiceDesafio]);
   yr = yr + vo;
   if ( yr > height ){
@@ -162,7 +171,6 @@ function fase1(){
       yr = - random(100,height);
     }
   }
-
   // movimenta a nave 
   if (keyIsDown(LEFT_ARROW)) {
     xJogador = xJogador - 5;
@@ -233,8 +241,10 @@ function setup() {
   respostas[2] = 35; 
   perguntas[3] = "56 / 4?"; 
   respostas[3] = 14; 
-
-
+  perguntas[4] = "3 + 2 * (5 + 1)";
+  respostas[4] = 15; 
+  perguntas[5] = "3 * 6 / 2";
+  respostas[5] = 9; 
 
 }
 
@@ -286,6 +296,9 @@ function draw() {
   }
   if (tela == 3){
     creditos(); 
+  }
+  if (tela == 4){
+    venceuJogo();
   }
   // Tela de espera 
   // Para quando o jogador perder uma vida 
